@@ -22,6 +22,12 @@ func main() {
 			if trimmedCommand[1] == "0" {
 				os.Exit(0)
 			}
+		case "echo":
+			res := ""
+			for i := 1; i < len(trimmedCommand); i++ {
+				res += " " + trimmedCommand[i]
+			}
+			fmt.Print(res + "\n")
 
 		default:
 			fmt.Print(trimmedCommand[0] + ": command not found\n")
