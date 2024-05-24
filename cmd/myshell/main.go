@@ -39,9 +39,9 @@ func main() {
 		case "type":
 			t, ok := cmds[trimmedCommand[1]]
 			if ok {
-				fmt.Print(trimmedCommand[1] + " is a shell " + t)
+				fmt.Print(trimmedCommand[1] + " is a shell " + t + "\n")
 			} else {
-				fmt.Print(trimmedCommand[1] + " not found")
+				fmt.Print(trimmedCommand[1] + " not found\n")
 			}
 
 		default:
