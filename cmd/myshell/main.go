@@ -4,49 +4,72 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"path"
 	"strings"
 )
 
-var cmds = make(map[string]string)
+var cmds = make(map[string]func([]string))
+
+func exitCmd(args []string) {
+	if args[0] == "0" {
+		os.Exit(0)
+	}
+}
+
+func typeCmd(args []string) {
+	cmd := args[0]
+	_, ok := cmds[cmd]
+	if ok {
+		fmt.Printf("%s is a shell builtin\n", cmd)
+		return
+	}
+	commandPath, found := findPath(cmd)
+	if found {
+		fmt.Printf("%s is %s\n", cmd, commandPath)
+		return
+	}
+	fmt.Printf("%s not found\n", cmd)
+
+}
+
+func findPath(cmd string) (string, bool) {
+	paths := strings.Split(os.Getenv("PATH"), ":")
+	for _, p := range paths {
+		filePath := path.Join(p, cmd)
+		if _, err := os.Stat(filePath); !os.IsNotExist(err) {
+			return filePath, true
+		}
+	}
+	return "", false
+}
+
+func echoCmd(args []string) {
+	res := ""
+	for _, a := range args {
+		res += " " + a
+	}
+	fmt.Print(res + "\n")
+}
 
 func main() {
 	// You can use print statements as follows for debugging, they'll be visible when running tests.
 	//fmt.Println("Logs from your program will appear here!")
-	cmds["exit"] = "builtin"
-	cmds["type"] = "builtin"
-	cmds["echo"] = "builtin"
+	cmds["exit"] = exitCmd
+	cmds["type"] = typeCmd
+	cmds["echo"] = echoCmd
 	for {
 		fmt.Fprint(os.Stdout, "$ ")
-		// Wait for user input
 		command, _ := bufio.NewReader(os.Stdin).ReadString('\n')
 		trimmedCommand := strings.Split(strings.TrimSpace(command), " ")
 
-		//checking if command exists
-		switch trimmedCommand[0] {
+		cmd, ok := cmds[trimmedCommand[0]]
 
-		case "exit":
-			if trimmedCommand[1] == "0" {
-				os.Exit(0)
-			}
-
-		case "echo":
-			res := ""
-			for i := 1; i < len(trimmedCommand); i++ {
-				res += " " + trimmedCommand[i]
-			}
-			fmt.Print(res + "\n")
-
-		case "type":
-			t, ok := cmds[trimmedCommand[1]]
-			if ok {
-				fmt.Print(trimmedCommand[1] + " is a shell " + t + "\n")
-			} else {
-				fmt.Print(trimmedCommand[1] + " not found\n")
-			}
-
-		default:
+		if ok {
+			cmd(trimmedCommand[1:])
+		} else {
 			fmt.Print(trimmedCommand[0] + ": command not found\n")
 		}
+
 	}
 
 }
