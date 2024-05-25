@@ -3,7 +3,9 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
+	"os/exec"
 	"path"
 	"strings"
 )
@@ -33,6 +35,9 @@ func typeCmd(args []string) {
 }
 
 func findPath(cmd string) (string, bool) {
+	if strings.HasPrefix(cmd, "/") {
+		return cmd, true
+	}
 	paths := strings.Split(os.Getenv("PATH"), ":")
 	for _, p := range paths {
 		filePath := path.Join(p, cmd)
@@ -67,6 +72,15 @@ func main() {
 		if ok {
 			cmd(trimmedCommand[1:])
 		} else {
+			path, ok := findPath(trimmedCommand[0])
+			if ok {
+				out, err := exec.Command(path, trimmedCommand[1:]...).Output()
+				if err != nil {
+					log.Fatal(err)
+				}
+				fmt.Print(string(out) + "\n")
+				return
+			}
 			fmt.Print(trimmedCommand[0] + ": command not found\n")
 		}
 
