@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"path"
@@ -77,9 +76,9 @@ func main() {
 		if ok {
 			out, err := exec.Command(path, trimmedCommand[1:]...).Output()
 			if err != nil {
-				log.Fatal(err)
+				fmt.Print(err)
 			}
-			fmt.Print(string(out) + "\n")
+			fmt.Print(string(out))
 			continue
 		}
 
