@@ -71,18 +71,19 @@ func main() {
 
 		if ok {
 			cmd(trimmedCommand[1:])
-		} else {
-			path, ok := findPath(trimmedCommand[0])
-			if ok {
-				out, err := exec.Command(path, trimmedCommand[1:]...).Output()
-				if err != nil {
-					log.Fatal(err)
-				}
-				fmt.Print(string(out) + "\n")
-				return
-			}
-			fmt.Print(trimmedCommand[0] + ": command not found\n")
+			continue
 		}
+		path, ok := findPath(trimmedCommand[0])
+		if ok {
+			out, err := exec.Command(path, trimmedCommand[1:]...).Output()
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Print(string(out) + "\n")
+			continue
+		}
+
+		fmt.Print(trimmedCommand[0] + ": command not found\n")
 
 	}
 
