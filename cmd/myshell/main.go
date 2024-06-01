@@ -70,10 +70,8 @@ func cdCmd(args []string) {
 	if len(args) > 1 {
 		fmt.Print("Usage: cd absolute or relative path\n")
 	}
-	err := os.Chdir(args[0])
-	if err != nil {
-		res := strings.TrimSpace(args[0])
-		fmt.Print(res + ": No such file or directory\\n")
+	if err := os.Chdir(args[0]); err != nil {
+		fmt.Fprintf(os.Stdout, "%s: No such file or directory\n", args[0])
 	}
 }
 
