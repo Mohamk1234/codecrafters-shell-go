@@ -72,7 +72,8 @@ func cdCmd(args []string) {
 	}
 	err := os.Chdir(args[0])
 	if err != nil {
-		fmt.Print("cd: <directory>: No such file or directory\n")
+		res := strings.TrimSpace(args[0])
+		fmt.Print(res + ": No such file or directory\\n")
 	}
 }
 
