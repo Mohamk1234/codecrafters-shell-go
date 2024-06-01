@@ -55,12 +55,23 @@ func echoCmd(args []string) {
 	fmt.Print(res + "\n")
 }
 
+func pwdCmd(args []string) {
+	currDir, err := os.Getwd()
+	if err != nil {
+		fmt.Print(err)
+		fmt.Print("\n")
+		return
+	}
+	fmt.Print(currDir + "\n")
+}
+
 func main() {
 	// You can use print statements as follows for debugging, they'll be visible when running tests.
 	//fmt.Println("Logs from your program will appear here!")
 	cmds["exit"] = exitCmd
 	cmds["type"] = typeCmd
 	cmds["echo"] = echoCmd
+	cmds["pwd"] = pwdCmd
 	for {
 		fmt.Fprint(os.Stdout, "$ ")
 		command, _ := bufio.NewReader(os.Stdin).ReadString('\n')
