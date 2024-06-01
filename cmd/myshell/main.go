@@ -66,6 +66,16 @@ func pwdCmd(args []string) {
 	fmt.Print(currDir + "\n")
 }
 
+func cdCmd(args []string) {
+	if len(args) > 1 {
+		fmt.Print("Usage: cd absolute or relative path\n")
+	}
+	err := os.Chdir(args[0])
+	if err != nil {
+		fmt.Print("cd: <directory>: No such file or directory\n")
+	}
+}
+
 func main() {
 	// You can use print statements as follows for debugging, they'll be visible when running tests.
 	//fmt.Println("Logs from your program will appear here!")
@@ -73,6 +83,7 @@ func main() {
 	cmds["type"] = typeCmd
 	cmds["echo"] = echoCmd
 	cmds["pwd"] = pwdCmd
+	cmds["cd"] = cdCmd
 	for {
 		fmt.Fprint(os.Stdout, "$ ")
 		command, _ := bufio.NewReader(os.Stdin).ReadString('\n')
