@@ -71,8 +71,10 @@ func cdCmd(args []string) {
 		fmt.Print("Usage: cd absolute or relative path\n")
 	}
 	if args[0] == "~" {
-		os.UserHomeDir()
-	} else if err := os.Chdir(args[0]); err != nil {
+		args[0] = os.Getenv("HOME")
+	}
+	err := os.Chdir(args[0])
+	if err != nil {
 		fmt.Fprintf(os.Stdout, "%s: No such file or directory\n", args[0])
 	}
 }
