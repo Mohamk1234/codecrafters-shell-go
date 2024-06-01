@@ -52,6 +52,7 @@ func echoCmd(args []string) {
 	for _, a := range args {
 		res += " " + a
 	}
+	res = strings.TrimSpace(res)
 	fmt.Print(res + "\n")
 }
 
